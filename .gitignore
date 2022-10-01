@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# PPM and PGM files
+*.ppm
+*.pgm
