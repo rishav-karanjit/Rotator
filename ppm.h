@@ -29,7 +29,7 @@ public:
     unsigned int size;
     string ftype;
     string fname;
-
+    
     ppm();
     //create a PPM object and fill it with data stored in fname 
     ppm(const std::string &fname);

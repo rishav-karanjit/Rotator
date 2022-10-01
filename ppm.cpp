@@ -17,6 +17,7 @@ void ppm::init() {
 //create a PPM object
 
 ppm::ppm() {
+    fname = "input.ppm";
     init();
 }
 
