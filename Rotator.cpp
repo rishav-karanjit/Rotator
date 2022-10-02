@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Rotator.h"
-#include "ppm.h"
-#include "pgm.h"
+#include "ColorPixel.h"
+#include "GrayPixel.h"
 
 using namespace std;
 
@@ -70,11 +70,11 @@ void Rotator::rotate(string option, string degree){
    int DegreeOfRotation = getDegreeOfRotation(degree,option);
 
    if(getExtension(input) == "ppm"){
-        ppm test(input);
+        ColorPixel test(input);
         test.rotateR90(output,DegreeOfRotation);
     }
     else{
-        pgm test(input);
+        GrayPixel test(input);
         test.rotateR90(output,DegreeOfRotation);
     }
 }
