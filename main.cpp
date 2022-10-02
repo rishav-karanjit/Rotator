@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include "ppm.h"
+#include "pgm.h"
 using namespace std;
 
 string getExtension(string filename){
@@ -68,12 +69,18 @@ int main(int argc, char** argv){
 
     string degree = argv[4];
     checkDegree(degree);
-
-    ppm test(input);
-    
     int DegreeOfRotation = getDegreeOfRotation(degree,options);
 
-    test.rotateR90(output,DegreeOfRotation);
+    if(ipExtension == "ppm"){
+        ppm test(input);
+        test.rotateR90(output,DegreeOfRotation);
+    }
+    else{
+        pgm test(input);
+        test.rotateR90(output,DegreeOfRotation);
+    }
+
+    
 
     return 0;
 }
