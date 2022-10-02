@@ -12,6 +12,14 @@ void ppm::init() {
     width = 0;
     height = 0;
     max_col_val = 255;
+
+    r_raw.clear();
+    g_raw.clear();
+    b_raw.clear();
+
+    r.clear();
+    g.clear();
+    b.clear();
 }
 
 //create a PPM object
@@ -66,7 +74,6 @@ void ppm::read(){
 
         }
         else{
-            
             std::cout << "Error. Unrecognized file format." << std::endl;
             return;
         }
@@ -185,18 +192,35 @@ void ppm::readp3() {
     }
     inp.close();
 }
-void ppm::rotateR90(){
+void ppm::rotateR90(string output,int DegreeOfRotation){
+     
     if(ftype == "P3")
-        rotateR90P3();
+        rotateR90P3(output);
     else
-        rotateR90P6();
+        rotateR90P6(output);
+
+    DegreeOfRotation -= 90;
+
+    string file;
+    for(int i = DegreeOfRotation; i > 0; i -= 90){
+        
+        file = output;
+        init();
+        this->fname = file;
+        read();
+        cout<<fname;
+        if(ftype == "P3")
+            rotateR90P3(output);
+        else
+            rotateR90P6(output);
+    }
+
 }
-void ppm::rotateR90P3(){
-    
+void ppm::rotateR90P3(string output){
     unsigned int start = size - width;
     unsigned int curr = 0;
     std::vector<string> r_new(size," "),g_new(size," "),b_new(size," ");
-
+    
     //std::string r_new[size],g_new[size],b_new[size];
     // r_new.reserve(size);
     // g_new.reserve(size);
@@ -212,7 +236,7 @@ void ppm::rotateR90P3(){
             r_new[curr] = r_raw[i];        
             g_new[curr] = g_raw[i];
             b_new[curr] = b_raw[i];
-                  
+            
             curr++;
             i = i - width;
 
@@ -220,7 +244,7 @@ void ppm::rotateR90P3(){
         start++;
     }
 
-    string fname = "tst.ppm";
+    string fname = output;
     ofstream inp(fname, std::ios::out );
 
     //| std::ios::binary
@@ -245,7 +269,6 @@ void ppm::rotateR90P3(){
         //     inp.write(&aux, 1);
         // }
         for (unsigned int i = 0; i < size; ++i) {
-            
             aux = r_new[i];
             inp<<aux<<endl;
             aux = g_new[i];
@@ -259,10 +282,14 @@ void ppm::rotateR90P3(){
     }
     
     inp.close();
+    r_new.clear();
+    g_new.clear();
+    b_new.clear();
+
 }
 
-void ppm::rotateR90P6(){
-    cout<<"yo";
+void ppm::rotateR90P6(string output){
+    
     unsigned int start = size - width;
     unsigned int curr = 0;
     std::vector<unsigned char> r_new,g_new,b_new;
@@ -286,7 +313,7 @@ void ppm::rotateR90P6(){
         start++;
     }
 
-    string fname = "tst.ppm";
+    string fname = output;
     ofstream inp(fname, std::ios::out | std::ios::binary);
     
     if (inp.is_open()) {

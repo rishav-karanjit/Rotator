@@ -29,7 +29,7 @@ public:
     unsigned int size;
     string ftype;
     string fname;
-    
+
     ppm();
     //create a PPM object and fill it with data stored in fname 
     ppm(const std::string &fname);
@@ -44,11 +44,11 @@ public:
     //read the PPM image from fname
     void readp3();
     //write the PPM image in fname
-    void rotateR90();
+    void rotateR90(string output,int DegreeOfRotation);
     //write the PPM image in fname
-    void rotateR90P3();
+    void rotateR90P3(string output);
 
-    void rotateR90P6();
+    void rotateR90P6(string output);
 };
 
 #endif
