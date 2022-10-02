@@ -4,42 +4,38 @@
 #include <exception>
 #include <string>
 
-#include "ppm.h"
+#include "GrayPixel.h"
 using namespace std;
 //init with default values
 
-void ppm::init() {
+void GrayPixel::init() {
     width = 0;
     height = 0;
     max_col_val = 255;
 
-    r_raw.clear();
-    g_raw.clear();
-    b_raw.clear();
+    grey_raw.clear();
 
-    r.clear();
-    g.clear();
-    b.clear();
+    grey.clear();
 }
 
-//create a PPM object
+//create a GrayPixel object
 
-ppm::ppm() {
-    fname = "input.ppm";
+GrayPixel::GrayPixel() {
+    fname = "input.pgm";
     init();
 }
 
-//create a PPM object and fill it with data stored in fname 
+//create a GrayPixel object and fill it with data stored in fname 
 
-ppm::ppm(const std::string &fname) {
+GrayPixel::GrayPixel(const std::string &fname) {
     init();
     this->fname = fname;
     read();
 }
 
-//create an "epmty" PPM image with a given width and height;the R,G,B arrays are filled with zeros
+//create an "epmty" GrayPixel image with a given width and height;the grey,G,B arrays are filled with zeros
 
-ppm::ppm(const unsigned int _width, const unsigned int _height) {
+GrayPixel::GrayPixel(const unsigned int _width, const unsigned int _height) {
     init();
     width = _width;
     height = _height;
@@ -47,30 +43,26 @@ ppm::ppm(const unsigned int _width, const unsigned int _height) {
     nr_columns = width;
     size = width*height;
 
-    // fill r, g and b with 0
-    r.resize(size);
-    g.resize(size);
-    b.resize(size);
+    // fill grey, g and b with 0
+    grey.resize(size);
 
-    r_raw.resize(size);
-    g_raw.resize(size);
-    b_raw.resize(size);
+    grey_raw.resize(size);
 }
 
 
-//read the PPM image from fname
-void ppm::read(){
+//read the GrayPixel image from fname
+void GrayPixel::read(){
     std::ifstream inp(fname.c_str(), std::ios::in);
 
     if(inp.is_open()){
         std::string line;
         std::getline(inp, line);
         ftype = line;
-        if (line.compare("P6") || line.compare("P3")) {
-            if(line == "P3")
-                readp3();
+        if (line.compare("P2") || line.compare("P5")) {
+            if(line == "P2")
+                readp2();
             else
-                readp6();
+                readp5();
 
         }
         else{
@@ -81,9 +73,9 @@ void ppm::read(){
 
 }
 
-//read the PPM image from fname
+//read the GrayPixel image from fname
 
-void ppm::readp6() {
+void GrayPixel::readp5() {
     std::ifstream inp(fname.c_str(), std::ios::in | std::ios::binary);
 
     if (inp.is_open()) {
@@ -120,18 +112,12 @@ void ppm::readp6() {
 
         size = width*height;
 
-        r.reserve(size);
-        g.reserve(size);
-        b.reserve(size);
+        grey.reserve(size);
 
         char aux;
         for (unsigned int i = 0; i < size; ++i) {
             inp.read(&aux, 1);
-            r.push_back((unsigned char) aux);
-            inp.read(&aux, 1);
-            g.push_back((unsigned char) aux);
-            inp.read(&aux, 1);
-            b.push_back((unsigned char) aux);
+            grey.push_back((unsigned char) aux);
         }
     } else {
         std::cout << "Error. Unable to open " << fname << std::endl;
@@ -139,7 +125,7 @@ void ppm::readp6() {
     inp.close();
 }
 
-void ppm::readp3() {
+void GrayPixel::readp2() {
     std::ifstream inp(fname.c_str(), std::ios::in);
 
     if (inp.is_open()) {
@@ -174,30 +160,24 @@ void ppm::readp3() {
 
         size = width*height;
 
-        r_raw.reserve(size);
-        g_raw.reserve(size);
-        b_raw.reserve(size);
+        grey_raw.reserve(size);
 
         string aux;
         for (unsigned int i = 0; i < size; ++i) {
             inp >> aux;
-            r_raw.push_back(aux);
-            inp >>aux;
-            g_raw.push_back(aux);
-            inp >> aux;
-            b_raw.push_back(aux);
+            grey_raw.push_back(aux);
         }
     } else {
         std::cout << "Error. Unable to open " << fname << std::endl;
     }
     inp.close();
 }
-void ppm::rotateR90(string output,int DegreeOfRotation){
+void GrayPixel::rotateR90(string output,int DegreeOfRotation){
      
-    if(ftype == "P3")
-        rotateR90P3(output);
+    if(ftype == "P5")
+        rotateR90P5(output);
     else
-        rotateR90P6(output);
+        rotateR90P2(output);
 
     DegreeOfRotation -= 90;
 
@@ -209,17 +189,17 @@ void ppm::rotateR90(string output,int DegreeOfRotation){
         this->fname = file;
         read();
         cout<<fname;
-        if(ftype == "P3")
-            rotateR90P3(output);
+        if(ftype == "P5")
+            rotateR90P5(output);
         else
-            rotateR90P6(output);
+            rotateR90P2(output);
     }
 
 }
-void ppm::rotateR90P3(string output){
+void GrayPixel::rotateR90P2(string output){
     unsigned int start = size - width;
     unsigned int curr = 0;
-    std::vector<string> r_new(size," "),g_new(size," "),b_new(size," ");
+    std::vector<string> grey_new(size," ");
     
     //std::string r_new[size],g_new[size],b_new[size];
     // r_new.reserve(size);
@@ -233,9 +213,7 @@ void ppm::rotateR90P3(string output){
         
         while(i >= 0){
 
-            r_new[curr] = r_raw[i];        
-            g_new[curr] = g_raw[i];
-            b_new[curr] = b_raw[i];
+            grey_new[curr] = grey_raw[i];        
             
             curr++;
             i = i - width;
@@ -250,7 +228,7 @@ void ppm::rotateR90P3(string output){
     //| std::ios::binary
     
     if (inp.is_open()) {
-        inp << "P3\n";
+        inp << "P2\n";
         inp << height;
         inp << " ";
         inp << width << "\n";
@@ -269,11 +247,7 @@ void ppm::rotateR90P3(string output){
         //     inp.write(&aux, 1);
         // }
         for (unsigned int i = 0; i < size; ++i) {
-            aux = r_new[i];
-            inp<<aux<<endl;
-            aux = g_new[i];
-            inp<<aux<<endl;
-            aux = b_new[i];
+            aux = grey_new[i];
             inp<<aux<<endl;
         }
 
@@ -282,29 +256,24 @@ void ppm::rotateR90P3(string output){
     }
     
     inp.close();
-    r_new.clear();
-    g_new.clear();
-    b_new.clear();
+    grey_new.clear();
 
 }
 
-void ppm::rotateR90P6(string output){
+void GrayPixel::rotateR90P5(string output){
     
     unsigned int start = size - width;
     unsigned int curr = 0;
-    std::vector<unsigned char> r_new,g_new,b_new;
-    r_new.reserve(size);
-    g_new.reserve(size);
-    b_new.reserve(size);
+    std::vector<unsigned char> grey_new;
+    grey_new.reserve(size);
 
     while(start < size){
 
         int i = start;
         
         while(i >= 0){
-            r_new[curr] = r[i];        
-            g_new[curr] = g[i];
-            b_new[curr] = b[i];
+            grey_new[curr] = grey[i];        
+
                   
             curr++;
             i = i - width;
@@ -317,7 +286,7 @@ void ppm::rotateR90P6(string output){
     ofstream inp(fname, std::ios::out | std::ios::binary);
     
     if (inp.is_open()) {
-        inp << "P6\n";
+        inp << "P5\n";
         inp << height;
         inp << " ";
         inp << width << "\n";
@@ -328,11 +297,7 @@ void ppm::rotateR90P6(string output){
         
         for (unsigned int i = 0; i < size; ++i) {
             
-            aux = (char) r_new[i];
-            inp.write(&aux, 1);
-            aux = (char) g_new[i];
-            inp.write(&aux, 1);
-            aux = (char) b_new[i];
+            aux = (char) grey_new[i];
             inp.write(&aux, 1);
         }
 

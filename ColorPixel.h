@@ -1,14 +1,14 @@
-//Process a binary PPM file
+//Process a binary ColorPixel file
 #include <vector>
 #include <string>
 
-#ifndef PPM_H
-#define PPM_H
+#ifndef ColorPixel_H
+#define ColorPixel_H
 
 using namespace std;
-class ppm {
+class ColorPixel {
     void init();
-    //info about the PPM file (height and width)
+    //info about the ColorPixel file (height and width)
     unsigned int nr_lines;
     unsigned int nr_columns;
 
@@ -30,22 +30,22 @@ public:
     string ftype;
     string fname;
 
-    ppm();
-    //create a PPM object and fill it with data stored in fname 
-    ppm(const std::string &fname);
-    //create an "epmty" PPM image with a given width and height;the R,G,B arrays are filled with zeros
-    ppm(const unsigned int _width, const unsigned int _height);
+    ColorPixel();
+    //create a ColorPixel object and fill it with data stored in fname 
+    ColorPixel(const std::string &fname);
+    //create an "epmty" ColorPixel image with a given width and height;the R,G,B arrays are filled with zeros
+    ColorPixel(const unsigned int _width, const unsigned int _height);
 
     //
     void read();
 
-    //read the PPM image from fname
+    //read the ColorPixel image from fname
     void readp6();
-    //read the PPM image from fname
+    //read the ColorPixel image from fname
     void readp3();
-    //write the PPM image in fname
+    //write the ColorPixel image in fname
     void rotateR90(string output,int DegreeOfRotation);
-    //write the PPM image in fname
+    //write the ColorPixel image in fname
     void rotateR90P3(string output);
 
     void rotateR90P6(string output);

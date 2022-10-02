@@ -1,14 +1,14 @@
-//Process a binary PGM file
+//Process a binary GrayPixel file
 #include <vector>
 #include <string>
 
-#ifndef PGM_H
-#define PGM_H
+#ifndef GrayPixel_H
+#define GrayPixel_H
 
 using namespace std;
-class pgm {
+class GrayPixel {
     void init();
-    //info about the PGM file (height and width)
+    //info about the GrayPixel file (height and width)
     unsigned int nr_lines;
     unsigned int nr_columns;
 
@@ -26,11 +26,11 @@ public:
     string ftype;
     string fname;
 
-    pgm();
+    GrayPixel();
     //create a PPM object and fill it with data stored in fname 
-    pgm(const std::string &fname);
+    GrayPixel(const std::string &fname);
     //create an "epmty" PPM image with a given width and height;the R,G,B arrays are filled with zeros
-    pgm(const unsigned int _width, const unsigned int _height);
+    GrayPixel(const unsigned int _width, const unsigned int _height);
 
     //
     void read();
